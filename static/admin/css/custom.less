@@ -1,0 +1,34 @@
+/**
+ * @author  widuu
+ * @license admin@widuu.com 
+ */
+
+/*按钮btn样式的圆角*/
+@btn-radius:3px;
+/*pading的宽度和高度*/
+@panel-heading-padding: 15px 30px;
+/*头部亮度*/
+@panel-heading-bcolor : #65CD62;
+/*新闻列表line-height*/
+@news-line-height:40px;
+/*字体*/
+@whole-font:"微软雅黑";
+body {	
+	font-family:@whole-font;color:#2c2e2f;
+}
+.btn {border-radius:@btn-radius;}
+.panel.panel-color .panel-heading{
+	padding:@panel-heading-padding ;
+	background-color:@panel-heading-bcolor;
+	font-family:@whole-font;
+}
+
+.news-list > tbody > tr > td {
+	line-height:@news-line-height;
+}
+.news-list > tbody > tr > th {
+	line-height:@news-line-height;
+}
+a {
+	
+}

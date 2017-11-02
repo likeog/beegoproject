@@ -1,0 +1,137 @@
+<extend name="Public:base" />
+<block name="css">
+	<link href="__JS__/umeditor/themes/default/css/umeditor.min.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" charset="utf-8" src="__JS__/umeditor/umeditor.config.js"></script>
+	<script type="text/javascript" charset="utf-8" src="__JS__/umeditor/umeditor.min.js"></script>
+	<script type="text/javascript" src="__JS__/umeditor/lang/zh-cn/zh-cn.js"></script>
+</block>
+<block name="content">
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">添加新闻</h3>
+			</div>
+			<div class="panel-body">
+				<form role="form" class="form-horizontal" method="post" action="">
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="field-1">新闻标题</label>	
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="title" name="title" value="<{$news.title|default=''}>" placeholder="新闻标题">
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="field-1">添加时间</label>	
+						<div class="col-sm-6">
+							<input type="text" class="form-control datepicker"  name="atime" <notempty name="news.atime">value="<{$news.atime|date='Y-m-d',###}>" </notempty>>
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="field-1">作&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;者</label>	
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="author" name="author" placeholder="作者" value="<{$news.author|default=''}>">
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="field-1">来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;源</label>	
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="origin" name="origin" placeholder="文章来源" value="<{$news.origin|default=''}>">
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="field-1">缩&nbsp;&nbsp;略&nbsp;&nbsp;图</label>	
+						<div class="col-sm-6">
+							<div id="queue"></div>
+							<input id="file_upload" name="pic" type="file" multiple="true">
+							<div class="upload-pre-item" <empty name="news.pic">style="display:none"</empty>>
+								<img src="<{$news.pic|default=''}>" width="120px;" height="120px;">					
+							</div>
+							<input type="hidden" name="pic" value="<{$news.pic|default=''}>" />
+
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" for="field-1">关&nbsp;&nbsp;键&nbsp;&nbsp;词</label>	
+						<div class="col-sm-6">
+							<input type="text" class="form-control" name="keywords" id="keywords" value="<{$news.keywords|default=''}>" placeholder="关 键 词">
+							<p class="help-block">  多个关键词使用英文逗号","分割</p>
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label" for="field-5">新闻描述</label>
+							<div class="col-sm-6">
+								<textarea class="form-control" cols="5" id="description" name="description"><{$news.description|default=''}></textarea>
+							</div>
+						</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">是否推荐</label>
+						<div class="col-sm-6">
+							<label class="radio-inline">
+								<input type="radio" name="position"  value="1" <eq name="news.position" value="1">checked=""</eq>>是
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="position" value="0" <eq name="news.position" value="0">checked=""</eq>>否
+							</label>
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">新闻内容</label>
+						<div class="col-sm-6">
+							<script type="text/plain" name="content" id="content" style="width:678px;height:300px;">
+								<{$news.content|default=''|htmlspecialchars_decode}>
+							</script>
+						</div>
+					</div>
+					<div class="form-group-separator"></div>
+					<div class="form-group text-center">
+						<input type="hidden" name="id" value="<{$id|default=''}>" />
+						<button type="submit" class="btn btn-info btn-single pull-center ajax-post"  target-form="form-horizontal"><notempty name="news.id">修改<else/>添加</notempty>新闻</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</block>
+<block name="script">
+<link rel="stylesheet" href="__PUBLIC__/js/uploadify/uploadify.css">
+<script src="__PUBLIC__/js/uploadify/jquery.uploadify.min.js"></script>
+<script src="__PUBLIC__/admin/js/daterangepicker/daterangepicker.js"></script>
+<script src="__PUBLIC__/admin/js/datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+$(function(){
+	window.UMEDITOR_CONFIG.imageUrl = "<{:U('News/fileupload')}>"
+	window.UMEDITOR_CONFIG.imagePath='/upload/';
+	UM.getEditor('content');
+	//图片上传
+	$('#file_upload').uploadify({
+		'height'      : 30,
+		'fileObjName' : 'upfile',
+		'swf'         : "__PUBLIC__/js/uploadify/uploadify.swf",
+		'uploader'    : "<{:U('News/fileupload')}>",
+		"buttonText"  : "上传图片",
+		"onUploadSuccess" : uploadPicturecover,
+	});
+
+	//上传成功之后
+	function uploadPicturecover(file,data){
+		var obj = eval( "(" + data + ")" );
+		if(obj.state == 'SUCCESS'){
+			$(".upload-pre-item").css('display','block');
+			$("input[name='pic']").val('/upload/'+obj.url);
+			$(".uploadify").height("17px");
+			$(".upload-pre-item").html('<img src="/upload/' + obj.url + '" width="120px;"/>');
+		}
+	}
+
+});
+</script>
+</block>
